@@ -63,6 +63,7 @@ const validationSchema = yup
   .required();
 
 const TodoForm = () => {
+  console.log("form");
   const {
     register,
     handleSubmit,
