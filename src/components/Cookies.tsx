@@ -4,7 +4,9 @@ import React, { RefObject, useRef } from "react";
 const setCookie = (
   name: string | number,
   value: string | number,
-  expireDays?: string | number
+  expireDays?: string | number,
+  httpOnly?: boolean,
+  secure?: boolean
 ) => {
   const date = new Date();
 
@@ -21,6 +23,14 @@ const setCookie = (
     cookieStr += ";" + expires;
   }
 
+  if (httpOnly) {
+    cookieStr += "; HttpOnly";
+  }
+
+  if (secure) {
+    cookieStr += "; Secure";
+  }
+  console.log(cookieStr);
   document.cookie = cookieStr;
 };
 
@@ -41,6 +51,19 @@ const Cookies = () => {
 
     // nếu chỉ truyền 2 tham số thì expires sẽ là session => tắt trình duyệt thì sẽ mất, tắt mỗi tab thì sẽ không mất
     setCookie(cookieName, cookieValue, cookieExpireDays);
+  };
+
+  const handleSetCookieWithSecure = () => {
+    const cookieName = cookieNameRef.current?.value;
+    const cookieValue = cookieValueRef.current?.value;
+    const cookieExpireDays = cookieExpireDaysRef.current?.value;
+
+    if (!cookieName || !cookieValue) {
+      alert("Invalid Cookie Input");
+      return;
+    }
+
+    setCookie(cookieName, cookieValue, cookieExpireDays, true, true);
   };
 
   // nếu truyền vào thời gian trước thời gian cookie này được tạo thì sẽ xoá cookie
@@ -64,10 +87,10 @@ const Cookies = () => {
 
     for (var i = 0; i < ca.length; i++) {
       let c = ca[i];
-      while (c.charAt(0) == " ") {
+      while (c.charAt(0) === " ") {
         c = c.substring(1);
       }
-      if (c.indexOf(name) == 0) {
+      if (c.indexOf(name) === 0) {
         return c.substring(name.length, c.length);
       }
     }
@@ -100,6 +123,13 @@ const Cookies = () => {
         <Button variant="contained" onClick={handleSetCookie}>
           Set Cookie
         </Button>
+        {/* <Button
+          sx={{ ml: "12px" }}
+          variant="contained"
+          onClick={handleSetCookieWithSecure}
+        >
+          Set Cookie With Secure
+        </Button> */}
         <Button
           sx={{ ml: "12px" }}
           variant="contained"
